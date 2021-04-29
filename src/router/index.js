@@ -13,12 +13,31 @@ const router = createRouter({
                 path: '/summary',
                 name: 'summary',
                 component: () => import(/* webpackChunkName: "about" */ '../views/Summary/index.vue'),
+            }, {
+                path: '/select',
+                name: 'select',
+                component: () => import(/* webpackChunkName: "about" */ '../views/SelectPage/index.vue'),
             }]
         },
         {
-            path: '/*',
-            name: '404',
-            redirect: '/',
+            path: '/findWay',
+            name: 'FindWay',
+            component: Home,
+            children: [{
+                path: '/findWay/:type',
+                name: 'find',
+                component: () => import('../views/GetLost/FindWay/index.vue')
+            }]
+        },
+        {
+            path: '/:path(.*)*',
+            name: 'ErrorPage',
+            component: Home,
+            children: [{
+                path: '/:path(.*)*',
+                name: '404',
+                component: () => import('../views/GetLost/FindWay/index.vue')
+            }]
         }
     ]
 });

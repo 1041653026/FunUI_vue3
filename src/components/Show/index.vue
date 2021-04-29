@@ -20,7 +20,8 @@
 /***
  * @codeHeight    String     code部分高度，用于过渡动画
  */
-export default {
+import { defineComponent } from 'vue'
+export default defineComponent({
     name: 'Show',
     props: {
         codeHeight: {
@@ -56,19 +57,19 @@ export default {
             }
         }
     }
-}
+})
 </script>
 
 <style lang='scss' scoped>
 .showPart {
     width: 100%;
-    border: 0.1rem solid #ccc;
-    box-shadow: 0 0 .3rem rgba(0,0,0,.1);
-    font-size: 1.6rem;
+    border: 0.01rem solid #ccc;
+    box-shadow: 0 0 .03rem rgba(0,0,0,.1);
+    font-size: 0.16rem;
     .main {
         width: 100%;
         box-sizing: border-box;
-        padding: 2rem;
+        padding: .2rem;
         text-align: left;
         border-bottom: 1px solid #ccc;
         background: rgba(255,255,255, .8);
@@ -76,7 +77,7 @@ export default {
     }
     .bottom {
         position: relative;
-        padding-bottom: 5rem;
+        padding-bottom: .5rem;
         &.sticky_bottom {
             padding-bottom: 0;
         }
@@ -87,7 +88,7 @@ export default {
             transition: all .3s ease-out 0s;
             &:hover+.footer {
                 .triangle {
-                    transform: translate(-3rem, -72%) rotate(180deg);
+                    transform: translate(-0.3rem, -72%) rotate(180deg);
                 }
                 .guide {
                     opacity: 1;
@@ -97,7 +98,7 @@ export default {
         }
         .footer {
             width: 100%;
-            height: 5rem;
+            height: .5rem;
             background: rgba(255,255,255, .8);
             transition: all .3s ease 0s;
             cursor: pointer;
@@ -113,7 +114,7 @@ export default {
                 transform: translate(-50%, -27%);
                 width: 0;
                 height: 0;
-                border: 0.9rem solid transparent;
+                border: 0.09rem solid transparent;
                 border-top-color: #ccc;
                 transition: all .3s ease 0s;
             }
@@ -132,7 +133,7 @@ export default {
                 background: rgba(243, 243, 243, 0.808);
                 .triangle {
                     border-top-color: #3A9CDB;
-                    transform: translate(-3rem, -27%);
+                    transform: translate(-0.3rem, -27%);
                 }
                 .guide {
                     opacity: 1 !important;
@@ -147,7 +148,7 @@ export default {
                 }
                 &:hover {
                     .triangle {
-                        transform: translate(-3rem, -72%) rotate(180deg);
+                        transform: translate(-0.3rem, -72%) rotate(180deg);
                     }
                 }
             }

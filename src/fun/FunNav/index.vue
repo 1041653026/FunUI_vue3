@@ -5,10 +5,6 @@
             <div :class="{item: true, active: active === item.route}">{{item.label}}</div>
         </div>
     </div>
-    <!-- <div class="item-outer"><div class="item">导航列表</div></div>
-        <div class="item-outer"><div class="item">导航列表</div></div>
-        <div class="item-outer"><div class="item">导航列表</div></div>
-        <div class="item-outer"><div class="item">导航列表</div></div> -->
 </div>
 </template>
 
@@ -19,7 +15,7 @@
 import {
     defineComponent,
     ref,
-    watch
+    watchEffect
 } from 'vue';
 import {
     useRoute,
@@ -42,39 +38,19 @@ export default defineComponent({
             active.value = cur;
             router.push(cur);
         }
-        watch(route, () => {
+        watchEffect(() => {
             active.value = route.path;
-        });
+        })
         return {
             list: props.list || [],
             active,
             jump
         }
     },
-    // props: {
-    //     list: {
-    //         type: Array,
-    //         default: () => []
-    //     },
-    // },
-    // created() {
-    //     this.active = this.$route.path;
-    // },
-    // methods: {
-    //     jump(cur) {
-    //         this.active = cur;
-    //         this.$router.push(cur)
-    //     }
-    // },
-    // watch: {
-    //     $route() {
-    //         this.active = this.$route.path;
-    //     }
-    // }
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .funNav {
     width: 100%;
     height: 100%;
@@ -101,9 +77,8 @@ export default defineComponent({
                 font-size: 1.5vw;
                 text-align: left;
                 line-height: 3vw;
-                background-image: url('../../assets/img/nav.png');
+                background: url('../../assets/img/nav.png') no-repeat;
                 background-size: 100% 100%;
-                background-repeat: no-repeat;
                 box-sizing: border-box;
                 padding-left: 60%;
                 transition: all .3s ease 0s;
