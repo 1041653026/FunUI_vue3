@@ -1,7 +1,6 @@
 import { onBeforeMount, onMounted, ref } from 'vue';
 
 export function useSpeak(word, box) {
-    console.log(word)
     let idx = 0;
     const _tempWord = word.value;
     const len = _tempWord.length - 1;

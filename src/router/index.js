@@ -2,7 +2,7 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 import Home from '../views/Home/index.vue';
 
 const router = createRouter({
-    history: createWebHashHistory(process.env.BASE_URL),
+    history: createWebHashHistory(),
     routes: [
         {
             path: '/',
