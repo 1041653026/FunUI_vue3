@@ -94,31 +94,6 @@ export default defineComponent({
             canvas
         }
     }
-    // data() {
-    //     return {
-    //         ctx: null,
-    //         curImg: 0,
-    //         timer: null,
-    //         history: []
-    //     }
-    // },
-    // mounted() {
-    //     this.keepChange();
-    // },
-    // beforeDestroy() {
-    //     this.breakKeepChange();
-    // },
-    // methods: {
-    //     keepChange() {
-    //         this.timer = setInterval(() => {
-    //             this.loadImg();
-    //         }, 10000);
-    //     },
-    //     breakKeepChange() {
-    //         clearInterval(this.timer);
-    //         this.timer = null;
-    //     }
-    // }
 })
 </script>
 

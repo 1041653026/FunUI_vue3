@@ -3,12 +3,16 @@
         <div class="select-title">
             <Title size='small'>
                 下拉框Select
-                <template v-slot:descript>当选项过多时，可以用下拉框选择器，他的背景图片可以改变为你想要的图片。</template>
+                <template v-slot:descript>当选项过多时，使用下拉框选择器选择内容。</template>
             </Title>
         </div>
         <div class="select-main">
-            <Show codeHeight='1200px'>
-                <template v-slot:main class='show-main'>我要展示select的样式</template>
+            <Show codeHeight='1200px' :style='{marginBottom: "0.5rem"}'>
+                <template v-slot:main class='show-main'>
+                    <div class="select-show">
+                        <fun-select></fun-select>
+                    </div>
+                </template>
                 <template v-slot:code class='show-code'>我要写select的代码</template>
             </Show>
             <Show codeHeight='1200px'>
@@ -27,16 +31,15 @@
 <script>
 import Title from '/@/components/Title/index.vue';
 import Show from '/@/components/Show/index.vue';
+import FunSelect from '/@/fun/FunSelect/index.vue';
 
 export default {
     name: 'SelectPage',
     components: {
         Title,
-        Show
+        Show,
+        FunSelect
     },
-    methods: {
-
-    }
 }
 </script>
 
@@ -50,8 +53,9 @@ export default {
     }
     .select-main {
         margin-top: .3rem;
-        .show-main {
-
+        .select-show {
+            width: 100%;
+            height: 2.5rem;
         }
         .show-code {
             height: 300px;

@@ -1,10 +1,10 @@
 <template>
-    <div class='showPart'>
+    <div class='showPart' :style='{...extendStyle}'>
         <main class='main'>
             <slot name='main'></slot>
         </main>
         <div :class="{bottom: true, sticky_bottom: supportSticky}">
-            <section class='code' ref='code'>
+            <section class='code' ref='codeBox'>
                 <slot name='code'></slot>
             </section>
             <footer :class='{footer: true, activeFooter: isShowCode, sticky_footer: supportSticky}' @click='changeShow'>
@@ -20,41 +20,55 @@
 /***
  * @codeHeight    String     code部分高度，用于过渡动画
  */
-import { defineComponent } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 export default defineComponent({
     name: 'Show',
     props: {
         codeHeight: {
             type: String,
             default: '0'
+        },
+        style: {
+            type: Object,
+            default: {}
         }
     },
-    data() {
-        return {
-            isShowCode: false,           // 是否显示代码
-            guide: '显示代码',            // 显示/隐藏代码
-            supportSticky: false        // 是否支持sticky粘性定位
-        }
-    },
-    mounted() {
-        this.testSticky();
-    },
-    methods: {
-        testSticky() {
+    setup(props) {
+        const isShowCode = ref(false); // 是否显示代码
+        const guide = ref('显示代码'); // 显示/隐藏代码
+        const supportSticky = ref(false); // 是否支持sticky粘性定位
+        const codeBox = ref(null); // code元素ref
+        const extendStyle = props.style; // 样式
+
+        // 测试当前浏览器是否支持粘性定位
+        function testSticky() {
             let body = document.body || document.documentElement;
             body.style.position = 'sticky';
             let _style = getComputedStyle(body) || body.currentStyle;
-            this.supportSticky = _style.position === 'sticky';
-        },
-        changeShow() {
-            this.isShowCode = !this.isShowCode;
-            if (this.isShowCode) {
-                this.$refs.code.style.height = this.codeHeight;
-                this.guide = '隐藏代码';
+            supportSticky.value = _style.position === 'sticky';
+        }
+        onMounted(() => {
+            testSticky();
+        });
+
+        // 改变状态函数
+        function changeShow() {
+            isShowCode.value = !isShowCode.value;
+            if (isShowCode.value) {
+                codeBox.value.style.height = props.codeHeight;
+                guide.value = '隐藏代码';
             } else {
-                this.$refs.code.style.height = 0;
-                this.guide = '显示代码';
+                codeBox.value.style.height = 0;
+                guide.value = '显示代码';
             }
+        }
+        return {
+            isShowCode,
+            guide,
+            supportSticky,
+            codeBox,
+            changeShow,
+            extendStyle
         }
     }
 })

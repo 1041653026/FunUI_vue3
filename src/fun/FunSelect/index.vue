@@ -1,15 +1,18 @@
 <template>
     <div class='select-outer' @click='open'>
-        <div v-if='filter' ref='selectMain' :class='{"select-main": true, selectDisabled: disabled}' :style='{paddingRight: "3.2rem"}'>
-            <input class='filter-input' type='text' :value='myValue' :disabled='disabled' @input='myFilter' />
-            <i class='select-filter-clear' v-show='!disabled' @click='selectClear'>×</i>
-        </div>
-        <div v-else :class='{"select-main": true, selectDisabled: disabled}' ref='selectMain'>{{myValue}}</div>
-        <div :class='{"select-triangle": true, triangleDisabled: disabled}'>
-            <span class='triangle-inner'></span>
-        </div>
-        <div class='select-options' data-val='dont_touch_me' :style='{height: active ? "15.6rem" : 0}' @click='mySelect'>
-            <div v-for='(item, i) in myList' :data-val='item' :key='i'>{{item}}</div>
+        <div class="select-bg"></div>
+        <div class="select-outer-box">
+            <div v-if='filter' ref='selectMain' :class='{"select-main": true, selectDisabled: disabled}' :style='{paddingRight: "3.2rem"}'>
+                <input class='filter-input' type='text' :value='myValue' :disabled='disabled' @input='myFilter' />
+                <i class='select-filter-clear' v-show='!disabled' @click='selectClear'>×</i>
+            </div>
+            <div v-else :class='{"select-main": true, selectDisabled: disabled}' ref='selectMain'>{{myValue}}</div>
+            <div :class='{"select-triangle": true, triangleDisabled: disabled}'>
+                <span class='triangle-inner'></span>
+            </div>
+            <div class='select-options' data-val='dont_touch_me' :style='{height: active ? "156px" : 0, opacity: active ? 1 : 0}' @click='mySelect'>
+                <div v-for='(item, i) in myList' :data-val='item' :key='i'>{{item}}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -80,7 +83,7 @@ export default {
             this.active = false;
         },
         open() {
-            if ((this.filter && this.active) || this.disabled) return;
+            // if ((this.filter && this.active) || this.disabled) return;
             this.active = !this.active;
         },
         mySelect(e) {
@@ -131,16 +134,8 @@ export default {
 <style lang="scss" scoped>
 .select-outer {
     width: 100%;
-    height: 100%;
+    height: 50px;
     position: relative;
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
-    padding: 0.24rem 0.08rem 0.08rem 0;
-    background-image: url('./kuang.png');
-    background-size: 100% 100%;
-    transition: all .3s linear 0s;
-    cursor: pointer;
     &:hover {
         border-color: red;
         .select-main {
@@ -149,127 +144,158 @@ export default {
             }
         }
     }
-    .select-main {
-        flex: 1;
+    .select-bg {
+        width: 100%;
+        height: 100%;
         box-sizing: border-box;
-        padding-left: 1.6rem;
-        font-size: 2.2rem;
-        font-weight: 300;
+        border-image: url("./kuang.png") 60 stretch;
+        border-color: red;
+        border-style: solid;
+        border-width: 10px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1;
+    }
+    .select-outer-box {
+        width: 100%;
+        height: 100%;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        position: relative;
-        .filter-input {
-            width: 100%;
-            height: 100%;
-            background:none;  
-            outline:none;  
-            border:none;
-            min-width: 0;
-            color: #fff;
-            &:focus {
-                border:none;
-            }
-        }
-        .select-filter-clear {
-            width: 2rem;
-            height: 2rem;
-            line-height: 1.8rem;
-            font-size: 1.5rem;
-            font-style: normal;
-            border-radius: 50%;
-            font-weight: 600;
+        flex-direction: row;
+        box-sizing: border-box;
+        padding: 0.24rem 0.08rem 0.08rem 0;
+        transition: all .3s linear 0s;
+        cursor: pointer;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 100;
+        .select-main {
+            flex: 1;
             box-sizing: border-box;
-            background-color: rgba(54, 123, 167, 0.5);
-            color: #fff;
-            position: absolute;
-            right: 0.5rem;
-            top: 1.35rem;
-            text-align: center;
-            z-index: 20;
-            transition: all .5s linear 0s;
-            opacity: 0;
-            &:hover {
-                background-color: rgba(58, 156, 219, 1);
+            padding-left: 0.16rem;
+            font-size: 0.22rem;
+            font-weight: 300;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+            .filter-input {
+                width: 100%;
+                height: 100%;
+                background:none;  
+                outline:none;  
+                border:none;
+                min-width: 0;
+                color: #fff;
+                &:focus {
+                    border:none;
+                }
+            }
+            .select-filter-clear {
+                width: .2rem;
+                height: .2rem;
+                line-height: 0.18rem;
+                font-size: 0.15rem;
+                font-style: normal;
+                border-radius: 50%;
+                font-weight: 600;
+                box-sizing: border-box;
+                background-color: rgba(54, 123, 167, 0.5);
+                color: #fff;
+                position: absolute;
+                right: 0.05rem;
+                top: 0.135rem;
+                text-align: center;
+                z-index: 20;
+                transition: all .5s linear 0s;
+                opacity: 0;
+                &:hover {
+                    background-color: rgba(58, 156, 219, 1);
+                }
+            }
+            &.selectDisabled {
+                background: rgba(150,150,150,.3);
+                cursor: not-allowed;
+                .filter-input {
+                    cursor: not-allowed;
+                }
             }
         }
-        &.selectDisabled {
-            background: rgba(150,150,150,.3);
-            cursor: not-allowed;
-            .filter-input {
+        .select-triangle {
+            width: 0.29rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(54, 123, 167, 0.5);
+            border-top-right-radius: 0.08rem;
+            border-bottom-right-radius: 0.08rem;
+            .triangle-inner {
+                transform: translateY(0.25rem);
+                border: 0.25rem solid transparent;
+                border-top-color: rgba(58, 156, 219, 1);
+                transform-origin: 0.5rem 0.35rem;
+                transition: all .2s linear 0s;
+            }
+            &.select-triangle {
                 cursor: not-allowed;
             }
         }
-    }
-    .select-triangle {
-        width: 2.9rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(54, 123, 167, 0.5);
-        border-top-right-radius: 0.08rem;
-        border-bottom-right-radius: 0.08rem;
-        .triangle-inner {
-            transform: translateY(0.25rem);
-            border: 0.5rem solid transparent;
-            border-top-color: rgba(58, 156, 219, 1);
-            transform-origin: 0.5rem 0.35rem;
-            transition: all .2s linear 0s;
-        }
-        &.select-triangle {
-            cursor: not-allowed;
-        }
-    }
-    .select-options {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        height: 0;
-        transition: all .3s ease 0s;
-        box-sizing: border-box;
-        text-align: left;
-        padding: 0 0.1rem 0 0.2rem;
-        overflow: auto;
-        background-image: url('../../assets/img/option_bg.png');
-        background-size: cover;
-        z-index: 400;
-        /* 去滚动条兼容 */
-        scrollbar-width: none;
-        -ms-scroll-chaining: chained;
-        -ms-overflow-style: none;
-        -ms-content-zooming: zoom;
-        -ms-scroll-rails: none;
-        -ms-content-zoom-limit-min: 100%;
-        -ms-content-zoom-limit-max: 500%;
-        -ms-scroll-snap-type: proximity;
-        -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
-        -ms-overflow-style: none;
-        /* webkit内核浏览器去滚动条 */
-        &::-webkit-scrollbar {
-            display:none;
-            width: 0;
-            opacity: 0;
-        }
-        &::before {
-            content: '';
-            display: block;
+        .select-options {
+            position: absolute;
+            top: 101%;
+            left: 0;
             width: 100%;
-            height: 0.2rem;
-        }
-        div {
-            width: 100%;
-            height: 3.85rem;
-            line-height: 3.85rem;
+            height: 0;
+            transition: all .3s ease 0s;
             box-sizing: border-box;
-            padding-left: 1.6rem;
-            font-size: 2.2rem;
-            font-weight: 300;
-            &:hover {
-            background-color: rgba(17, 80, 156, 0.9);
+            text-align: left;
+            padding: 0 0.1rem 0 0.2rem;
+            overflow: auto;
+            // background: url('./option_bg.png') no-repeat;
+            // background-size: 100% 100%;
+            box-sizing: border-box;
+            border: 1px solid rgba(0, 159, 232, 1);
+            background-color: rgba(0, 159, 232, 0.5);
+            z-index: 400;
+            /* 去滚动条兼容 */
+            scrollbar-width: none;
+            -ms-scroll-chaining: chained;
+            -ms-overflow-style: none;
+            -ms-content-zooming: zoom;
+            -ms-scroll-rails: none;
+            -ms-content-zoom-limit-min: 100%;
+            -ms-content-zoom-limit-max: 500%;
+            -ms-scroll-snap-type: proximity;
+            -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
+            -ms-overflow-style: none;
+            /* webkit内核浏览器去滚动条 */
+            &::-webkit-scrollbar {
+                display:none;
+                width: 0;
+                opacity: 0;
+            }
+            &::before {
+                content: '';
+                display: block;
+                width: 100%;
+                height: 0.2rem;
+            }
+            div {
+                width: 100%;
+                height: 0.385rem;
+                line-height: 0.385rem;
+                box-sizing: border-box;
+                padding-left: 0.16rem;
+                font-size: 0.22rem;
+                font-weight: 300;
+                &:hover {
+                    background-color: rgba(17, 80, 156, 0.9);
+                }
             }
         }
     }
+    
 }
 </style>
