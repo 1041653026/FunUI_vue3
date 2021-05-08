@@ -23,3 +23,9 @@ body {
   text-align: left;
   color: #2c3e50;
 }
+/* hljs */
+.hljs {
+    background: none !important;
+    padding: 0.2rem !important;
+    line-height: 0.25rem !important;
+}

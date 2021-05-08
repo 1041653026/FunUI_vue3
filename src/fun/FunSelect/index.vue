@@ -1,24 +1,53 @@
 <template>
-    <div class='select-outer' @click='open'>
+    <div class='select-outer'
+        ref='selectMain'
+        @click='open'
+        :style="{
+            width: compareType(width, 'String') ? width : width + 'px',
+            height: compareType(height, 'String') ? height : height + 'px',
+            fontSize: compareType(fontSize, 'String') ? fontSize : fontSize + 'px',
+            ...style
+        }"
+    >
         <div class="select-bg"></div>
         <div class="select-outer-box">
-            <div v-if='filter' ref='selectMain' :class='{"select-main": true, selectDisabled: disabled}' :style='{paddingRight: "3.2rem"}'>
-                <input class='filter-input' type='text' :value='myValue' :disabled='disabled' @input='myFilter' />
-                <i class='select-filter-clear' v-show='!disabled' @click='selectClear'>×</i>
+            <div :class='{"select-main": true, selectDisabled: disabled}'>
+                <input
+                    class='filter-input'
+                    type='text'
+                    :readonly='!filter'
+                    :placeholder="placeholder"
+                    :value='myValue'
+                    :disabled='disabled'
+                    @input='changeVal'
+                >
+                <i v-if='filter' class='select-filter-clear' v-show='!disabled' @click='selectClear'>×</i>
             </div>
-            <div v-else :class='{"select-main": true, selectDisabled: disabled}' ref='selectMain'>{{myValue}}</div>
-            <div :class='{"select-triangle": true, triangleDisabled: disabled}'>
+            <div
+                :class='{
+                    "select-triangle": true,
+                    triangleDisabled: disabled, "active-triangle": !disabled && active
+                }'
+            >
                 <span class='triangle-inner'></span>
             </div>
-            <div class='select-options' data-val='dont_touch_me' :style='{height: active ? "156px" : 0, opacity: active ? 1 : 0}' @click='mySelect'>
-                <div v-for='(item, i) in myList' :data-val='item' :key='i'>{{item}}</div>
+            <div class='select-options' data-val='dont_touch_me' :style='{height: active ? "180px" : 0, opacity: active ? 1 : 0}' @click='mySelect'>
+                <div v-for='(item, i) in myList' :key='i' @click.stop.prevent='chooseItem(item)'>{{item.label}}</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { ref, triggerRef } from 'vue';
+import { testType, compareType } from '../utils/index';
+import { useControlOpen } from './hooks';
 /***
+ * @placeholder  占位文字
+ * @width        组件宽度
+ * @height       组件高度
+ * @fontSize     字体大小
+ * @style        扩展整体样式
  * @defaultValue 默认选定的值
  * @ListData     选择器数据[{label: '', value: ''}]
  * @onSelect     选择方法
@@ -28,8 +57,29 @@
 export default {
     name: 'FunSelect',
     props: {
-        defaultValue: {
+        placeholder: {
+            type: String,
             default: '点击选择选项'
+        },
+        width: {
+            type: [String, Number],
+            default: '100%'
+        },
+        height: {
+            type: [String, Number],
+            default: 50
+        },
+        fontSize: {
+            type: [String, Number],
+            default: 16
+        },
+        style: {
+            type: Object,
+            default: {}
+        },
+        modelValue: {
+            type: [Array, String, Number, Boolean, Object],
+            default: ''
         },
         listData: {
             type: Array,
@@ -48,11 +98,34 @@ export default {
             default: false
         }
     },
+    setup(props, ctx) {
+        const myValue = ref('路飞');
+        // 打开下拉框hooks
+        const { active, open } = useControlOpen();
+        // 修改input输入框的值
+        function changeVal(e) {
+            // ctx.emit('update:modelValue', e.target.value);
+            myValue.value = e.target.value;
+        }
+        // 选择选项
+        function chooseItem(item) {
+            myValue.value = item.label;
+            ctx.emit('update:modelValue', item.value);
+            open();
+        }
+        
+        return {
+            myValue,
+            active,
+            open,
+            changeVal,
+            compareType,
+            chooseItem
+        }
+    },
     data() {
         return {
-            active: false,                        // 控制下拉框的显隐
-            filterVal: '',                        // 模糊匹配的值
-            myValue: '点击选择选项',               // 选中的值
+            filterVal: '',                        // 模糊匹配的值     
             myList: []                            // 列表数据
         }
     },
@@ -60,7 +133,7 @@ export default {
         this.getDefaultValue();
         document.addEventListener('click', this.docClick, true);
     },
-    beforeDestroy () {
+    beforeUnmount () {
         document.removeEventListener('click', this.docClick);
     },
     methods: {
@@ -78,19 +151,21 @@ export default {
             this.myList = this.listData;
         },
         docClick(e) {
+            for (let i = 0; i < e.path.length; i++) {
+                if (e.path[i] === this.$refs.selectMain) {
+                    return;
+                }
+            }
             if (e.target === this.$refs.selectMain) return;
             if (this.filter && this.active) return;
             this.active = false;
-        },
-        open() {
-            // if ((this.filter && this.active) || this.disabled) return;
-            this.active = !this.active;
         },
         mySelect(e) {
             let val = e.target.getAttribute('data-val');
             e.stopPropagation && e.stopPropagation();
             e.cancelBubble = true;
             if (val === 'dont_touch_me') {
+                this.active = false;
                 return;
             }
             this.myValue = e.target.innerHTML;
@@ -136,11 +211,11 @@ export default {
     width: 100%;
     height: 50px;
     position: relative;
+    font-size: 16px;
     &:hover {
-        border-color: red;
         .select-main {
             .select-filter-clear {
-                opacity: 1;
+                opacity: 1 !important;
             }
         }
     }
@@ -148,7 +223,7 @@ export default {
         width: 100%;
         height: 100%;
         box-sizing: border-box;
-        border-image: url("./kuang.png") 60 stretch;
+        border-image: url("./images/kuang.png") 60 stretch;
         border-color: red;
         border-style: solid;
         border-width: 10px;
@@ -156,6 +231,7 @@ export default {
         left: 0;
         top: 0;
         z-index: 1;
+        pointer-events: none;
     }
     .select-outer-box {
         width: 100%;
@@ -163,7 +239,6 @@ export default {
         display: flex;
         flex-direction: row;
         box-sizing: border-box;
-        padding: 0.24rem 0.08rem 0.08rem 0;
         transition: all .3s linear 0s;
         cursor: pointer;
         position: absolute;
@@ -173,8 +248,7 @@ export default {
         .select-main {
             flex: 1;
             box-sizing: border-box;
-            padding-left: 0.16rem;
-            font-size: 0.22rem;
+            padding-left: 2%;
             font-weight: 300;
             display: flex;
             flex-direction: column;
@@ -184,30 +258,33 @@ export default {
             .filter-input {
                 width: 100%;
                 height: 100%;
+                line-height: 100%;
+                color: #000;
                 background:none;  
                 outline:none;  
                 border:none;
                 min-width: 0;
-                color: #fff;
+                cursor: pointer;
                 &:focus {
                     border:none;
                 }
             }
             .select-filter-clear {
-                width: .2rem;
-                height: .2rem;
-                line-height: 0.18rem;
-                font-size: 0.15rem;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 20px;
                 font-style: normal;
                 border-radius: 50%;
-                font-weight: 600;
+                font-weight: 300;
                 box-sizing: border-box;
                 background-color: rgba(54, 123, 167, 0.5);
-                color: #fff;
+                color: #000;
                 position: absolute;
-                right: 0.05rem;
-                top: 0.135rem;
-                text-align: center;
+                right: 5px;
+                top: 13.5px;
                 z-index: 20;
                 transition: all .5s linear 0s;
                 opacity: 0;
@@ -224,21 +301,24 @@ export default {
             }
         }
         .select-triangle {
-            width: 0.29rem;
+            width: 29px;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: rgba(54, 123, 167, 0.5);
-            border-top-right-radius: 0.08rem;
-            border-bottom-right-radius: 0.08rem;
             .triangle-inner {
-                transform: translateY(0.25rem);
-                border: 0.25rem solid transparent;
+                transform: translateY(10px);
+                border: 10px solid transparent;
                 border-top-color: rgba(58, 156, 219, 1);
-                transform-origin: 0.5rem 0.35rem;
+                transform-origin: 10px 5px;
                 transition: all .2s linear 0s;
             }
-            &.select-triangle {
+            &.active-triangle {
+                .triangle-inner {
+                    transform: translateY(10px) rotate(180deg);
+                }
+            }
+            &.triangleDisabled {
                 cursor: not-allowed;
             }
         }
@@ -251,7 +331,6 @@ export default {
             transition: all .3s ease 0s;
             box-sizing: border-box;
             text-align: left;
-            padding: 0 0.1rem 0 0.2rem;
             overflow: auto;
             // background: url('./option_bg.png') no-repeat;
             // background-size: 100% 100%;
@@ -284,14 +363,13 @@ export default {
             }
             div {
                 width: 100%;
-                height: 0.385rem;
-                line-height: 0.385rem;
+                height: 40px;
+                line-height: 40px;
                 box-sizing: border-box;
-                padding-left: 0.16rem;
-                font-size: 0.22rem;
+                padding-left: 16px;
                 font-weight: 300;
                 &:hover {
-                    background-color: rgba(17, 80, 156, 0.9);
+                    background-color: rgba(17, 80, 156, 0.5);
                 }
             }
         }
