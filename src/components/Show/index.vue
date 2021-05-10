@@ -87,7 +87,7 @@ export default defineComponent({
         text-align: left;
         border-bottom: 1px solid #ccc;
         background: rgba(255,255,255, .8);
-        overflow: hidden;
+        // overflow: hidden;
     }
     .bottom {
         position: relative;
@@ -98,8 +98,8 @@ export default defineComponent({
         .code {
             width: 100%;
             height: 0;
-            overflow: hidden;
             transition: all .3s ease-out 0s;
+            overflow: hidden;
             &:hover+.footer {
                 .triangle {
                     transform: translate(-0.3rem, -72%) rotate(180deg);
