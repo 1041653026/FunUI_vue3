@@ -1,6 +1,6 @@
 <template>
-<div class="title flexRow" :class='{center: align === "center", right: align === "right", big: size === "big", small: size === "small"}'>
-    <div class='title-main'>
+<div class="title flexRow" :class='{center: align === "center", right: align === "right", big: size === "big", small: size === "small", mini: size === "mini"}'>
+    <div class='title-main' :style='{color}'>
         <slot name='default'></slot>
     </div>
     <div class="title-des">
@@ -11,9 +11,9 @@
 
 <script>
 /***
- *@size      字体大小，默认正常     可选值big/small
+ *@size      字体大小，默认正常     可选值big/small/mini
  *@align     默认对齐,默认left     可选值left/center/right
- *
+ *@color     字体颜色
  */
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -26,6 +26,10 @@ export default defineComponent({
         align: {
             type: String,
             default: ''
+        },
+        color: {
+            type: String,
+            default: '#48b5f8'
         }
     }
 })
@@ -67,6 +71,18 @@ export default defineComponent({
         .title-main {
             line-height: .4rem;
             font-size: .25rem;
+        }
+
+        .title-des {
+            font-size: .16rem;
+        }
+    }
+    &.mini {
+        min-height: .7rem;
+
+        .title-main {
+            line-height: .4rem;
+            font-size: .20rem;
         }
 
         .title-des {

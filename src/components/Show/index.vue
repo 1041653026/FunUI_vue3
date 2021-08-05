@@ -77,15 +77,28 @@ export default defineComponent({
 <style lang='scss' scoped>
 .showPart {
     width: 100%;
-    border: 0.01rem solid #ccc;
-    box-shadow: 0 0 .03rem rgba(0,0,0,.1);
+    border: 0.01rem solid #ebebeb;
     font-size: 0.16rem;
+    &:hover {
+        box-shadow: 0 0 .03rem rgba(0,0,0,.1);
+        .bottom {
+            .footer {
+                .triangle {
+                    left: calc(50% - 0.3rem) !important;
+                }
+                .guide {
+                    opacity: 1;
+                    transform: translate(0%, -50%);
+                }
+            }
+        }
+    }
     .main {
         width: 100%;
         box-sizing: border-box;
         padding: .2rem;
         text-align: left;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #ebebeb;
         background: rgba(255,255,255, .8);
         // overflow: hidden;
     }
@@ -100,15 +113,6 @@ export default defineComponent({
             height: 0;
             transition: all .3s ease-out 0s;
             overflow: hidden;
-            &:hover+.footer {
-                .triangle {
-                    transform: translate(-0.3rem, -72%) rotate(180deg);
-                }
-                .guide {
-                    opacity: 1;
-                    transform: translate(0%, -50%);
-                }
-            }
         }
         .footer {
             width: 100%;
@@ -147,7 +151,7 @@ export default defineComponent({
                 background: rgba(243, 243, 243, 0.808);
                 .triangle {
                     border-top-color: #3A9CDB;
-                    transform: translate(-0.3rem, -27%);
+                    transform: translate(-50%, -27%);
                 }
                 .guide {
                     opacity: 1 !important;
@@ -162,7 +166,7 @@ export default defineComponent({
                 }
                 &:hover {
                     .triangle {
-                        transform: translate(-0.3rem, -72%) rotate(180deg);
+                        transform: translate(-50%, -72%) rotate(180deg);
                     }
                 }
             }

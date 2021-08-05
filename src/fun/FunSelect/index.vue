@@ -32,7 +32,17 @@
                 <span class='triangle-inner'></span>
             </div>
             <div class='select-options' data-val='dont_touch_me' :style='{height: active ? "180px" : 0, opacity: active ? 1 : 0}' @click='mySelect'>
-                <div v-for='(item, i) in myList' :key='i' @click.stop.prevent='chooseItem(item)'>{{item.label}}</div>
+                <div
+                    v-for='(item, i) in myList' 
+                    :key='i'
+                    @click.stop.prevent='chooseItem(item)'
+                    class='select-options-item'
+                    :class='{
+                        "disabled-item": item.disabled
+                    }'
+                >
+                    {{item.label}}
+                </div>
             </div>
         </div>
     </div>
@@ -101,7 +111,7 @@ export default {
     setup(props, ctx) {
         const myValue = ref('路飞');
         // 打开下拉框hooks
-        const { active, open } = useControlOpen();
+        const { active, open } = useControlOpen(props.disabled);
         // 修改input输入框的值
         function changeVal(e) {
             // ctx.emit('update:modelValue', e.target.value);
@@ -109,6 +119,7 @@ export default {
         }
         // 选择选项
         function chooseItem(item) {
+            if (item.disabled) return;
             myValue.value = item.label;
             ctx.emit('update:modelValue', item.value);
             open();
@@ -346,7 +357,7 @@ export default {
             -ms-scroll-rails: none;
             -ms-content-zoom-limit-min: 100%;
             -ms-content-zoom-limit-max: 500%;
-            -ms-scroll-snap-type: proximity;
+            scroll-snap-type: proximity;
             -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
             -ms-overflow-style: none;
             /* webkit内核浏览器去滚动条 */
@@ -361,7 +372,7 @@ export default {
                 width: 100%;
                 height: 0.2rem;
             }
-            div {
+            .select-options-item {
                 width: 100%;
                 height: 40px;
                 line-height: 40px;
@@ -370,6 +381,10 @@ export default {
                 font-weight: 300;
                 &:hover {
                     background-color: rgba(17, 80, 156, 0.5);
+                }
+                &.disabled-item {
+                    cursor: not-allowed;
+                    background-color: rgba(48, 64, 85, 0.5);
                 }
             }
         }
