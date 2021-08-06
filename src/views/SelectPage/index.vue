@@ -3,7 +3,7 @@
         <div class="select-title">
             <Title size='small'>
                 下拉框Select
-                <template v-slot:descript>当选项过多时，使用下拉框选择器选择内容。2132132132132</template>
+                <template v-slot:descript>当选项过多时，使用下拉框选择器选择内容。</template>
             </Title>
         </div>
         <div class="select-main">
